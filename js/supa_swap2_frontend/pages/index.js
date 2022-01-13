@@ -1,8 +1,29 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import styled from 'styled-components'
 
 export default function Home() {
+  const StyledTitle = styled.button`
+  padding-top: 25px;
+  padding-bottom: 25px;
+  padding-left: 25px;
+  padding-right: 25px;
+  color: white; 
+  background: orange;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 42px;
+  font-weight: bold;
+  
+  ${props => props.primary && css`
+  `}
+  `;
+
+
+
+
   return (
     <div className={styles.container}>
       <Head>
@@ -16,7 +37,13 @@ export default function Home() {
         </h1>
 
         <p className={styles.description}>
-          <button> Connect your Wallet</button>
+
+          
+
+          <StyledTitle>
+            
+            Connect Your Wallet
+          </StyledTitle>
           
         </p>
       </main>
