@@ -9,16 +9,15 @@ export default function Home() {
   padding-bottom: 25px;
   padding-left: 25px;
   padding-right: 25px;
-  color: white; 
-  background: orange;
+  color: white ; 
+  background: black;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 42px;
+  font-size: 24px;
   font-weight: bold;
-  
-  ${props => props.primary && css`
-  `}
+  border-radius: 60px;
+  border: 2px solid;
   `;
 
 
