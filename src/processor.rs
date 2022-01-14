@@ -20,13 +20,15 @@ impl Processor {
         accounts: &[AccountInfo],
         instruction_data: &[u8],
     ) -> ProgramResult {
+        msg!("INSTRUCTION DATA: {:?}", instruction_data);
+
         let instruction = ExchangeBoothInstruction::try_from_slice(instruction_data)
             .map_err(|_| ProgramError::InvalidInstructionData)?;
 
         match instruction {
-            ExchangeBoothInstruction::InititializeExchangeBooth { } => {
+            ExchangeBoothInstruction::InititializeExchangeBooth { fee } => {
                 msg!("Instruction: InitializeExchangeBooth");
-                initialize_exchange_booth::process(program_id, accounts)?;
+                initialize_exchange_booth::process(program_id, accounts, fee)?;
             }
             ExchangeBoothInstruction::Deposit { } => {
                 msg!("Instruction: Deposit");
@@ -36,9 +38,9 @@ impl Processor {
                 msg!("Instruction: Withdraw");
                 withdraw::process(program_id, accounts)?;
             }
-            ExchangeBoothInstruction::Exchange { } => {
+            ExchangeBoothInstruction::Exchange { amount} => {
                 msg!("Instruction: Withdraw");
-                exchange::process(program_id, accounts)?;
+                exchange::process(program_id, accounts, amount)?;
             }
             ExchangeBoothInstruction::CloseExchangeBooth { } => {
                 msg!("Instruction: CloseExchangeBooth");
