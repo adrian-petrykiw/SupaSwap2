@@ -34,6 +34,10 @@ pub fn process(
     let mint_x_ai = next_account_info(accounts_iter)?;
     let mint_y_ai = next_account_info(accounts_iter)?;
 
+
+    let (authority_key, auth_bump) =
+        Pubkey::find_program_address(&[mint_x_ai.key.as_ref(), mint_y_ai.key.as_ref()], program_id);
+
     invoke(
         &transfer(&spl_token::ID, user_ta_x_ai.key, vault_ta_x_ai.key, user_ai.key, &[user_ai.key], amount)?,
         accounts
@@ -41,8 +45,9 @@ pub fn process(
 
     invoke_signed(&transfer(&spl_token::ID, vault_ta_y_ai.key, user_ta_y_ai.key, exchange_authority_ai.key, &[exchange_authority_ai.key], amount*from_to_price)?,
         accounts,
-        &[&[mint_x_ai.key.as_ref(), mint_y_ai.key.as_ref()]]
+        &[&[mint_x_ai.key.as_ref(), mint_y_ai.key.as_ref(), &[auth_bump]]]
     )?;
+
     
 
     Ok(())

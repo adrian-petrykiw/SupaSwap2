@@ -7,16 +7,17 @@ use solana_program::{
 pub enum ExchangeBoothInstruction {
     InititializeExchangeBooth {
         fee: u32,
-     },
+    },
+     Exchange {
+        amount: u64,
+    },
     Deposit {
         // TODO
     },
     Withdraw {
         // TODO
     },
-    Exchange {
-        amount: u64,
-    },
+    
     CloseExchangeBooth {
         // TODO
     },

@@ -25,8 +25,9 @@ const splToken = require('@solana/spl-token');
 
 (async () => {
   // Connect to cluster
-  const connection = new web3.Connection( 
-    web3.clusterApiUrl('devnet'),
+  const connection = new web3.Connection(
+    'http://localhost:8899',
+    // web3.clusterApiUrl('devnet'),
     'confirmed',
   );
 
@@ -45,16 +46,25 @@ const splToken = require('@solana/spl-token');
 
   var fromAirdropSignature = await connection.requestAirdrop(
     fromWallet.publicKey,
-    web3.LAMPORTS_PER_SOL,
+    web3.LAMPORTS_PER_SOL*2,
   );
 
-  var testAirdropSignature = await connection.requestAirdrop(
-    testUser.publicKey,
-    web3.LAMPORTS_PER_SOL,
-  );
   // Wait for airdrop confirmation
   await connection.confirmTransaction(fromAirdropSignature);
-  await connection.confirmTransaction(testAirdropSignature);
+
+  var transaction = new web3.Transaction().add(
+    web3.SystemProgram.transfer({
+        fromPubkey: fromWallet.publicKey,
+        toPubkey: testUser.publicKey,
+        lamports: web3.LAMPORTS_PER_SOL * 1,
+    })
+  );
+  // Sign transaction, broadcast, and confirm
+  var signature = await web3.sendAndConfirmTransaction(
+      connection,
+      transaction,
+      [fromWallet]
+  );
 
   console.log("Airdrop recieved")
 
@@ -224,6 +234,8 @@ const splToken = require('@solana/spl-token');
   );
 
   console.log('SIGNATURE', signature);
+  console.log("User balance X:"+ (await connection.getTokenAccountBalance(testXKey)).value.amount +" Y: "+ (await connection.getTokenAccountBalance(testYKey)).value.amount)
+
 })();
 
 const initialize = (admin, oracle, exchange_authority, vault_x, vault_y, mint_x, mint_y, exchangeProgramId, _fee) => {
@@ -287,7 +299,7 @@ const initialize = (admin, oracle, exchange_authority, vault_x, vault_y, mint_x,
 
 const exchange = (user, userTAX, userTAY, vault_x, vault_y, exchange_auth, mint_x, mint_y, exchangeProgramId,_amount) => {
 
-  const instruction = Buffer.from(new Uint8Array((new BN(3)).toArray("le", 3)));
+  const instruction = Buffer.from(new Uint8Array((new BN(1)).toArray("le", 1)));
   const amount = Buffer.from(new Uint8Array((new BN(_amount)).toArray("le", 8)));
 
   return new TransactionInstruction({
@@ -320,7 +332,7 @@ const exchange = (user, userTAX, userTAY, vault_x, vault_y, exchange_auth, mint_
       {
         pubkey: exchange_auth,
         isSigner: false,
-        isWritable: false,
+        isWritable: true,
       },
       {
         pubkey: mint_x,
