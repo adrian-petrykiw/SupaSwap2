@@ -43,6 +43,10 @@ const ConnectToPhantom = () => {
     phantom?.disconnect();
   };
 
+  const signAndSend = () => {
+    
+  };
+
   if (phantom) {
     if (connected) {
 
@@ -81,6 +85,9 @@ const ConnectToPhantom = () => {
                 
       
       <button
+      onClick={
+        signAndSend
+      }
                     className="px-6 py-2 ml-4 font-semibold shadow-lg bg-black border-cyan-900 text-center transition hover:shadow-lg hover:bg-white border border-black hover:text-black rounded-md text-white  ">
           Submit
       </button>
